@@ -25,14 +25,15 @@ import com.chinaroad.foundation.utils.ByteUtils;
  * The fields are described in the following sections. 
  * All data values are in big-endian order: higher order bytes precede lower order bytes. 
  * 
- * @author <a href="mailto:joe.dengtao@gmail.com">DengTao</a>
+ * @author <a href="mailto:joe.dengtao@gmail.com">D.T.</a>
  */
 public class Protocol {
 
 	public static enum PushMode {
 		PUBLISH((byte) 0x00),
 		LISTEN((byte) 0x10),
-		FEEDBACK((byte) 0x01);
+		RPC_REQ((byte) 0x02),
+		RPC_RESP((byte) 0x03);
 		
 		private byte val;
 		
@@ -49,31 +50,7 @@ public class Protocol {
 				if (t.val == val)
 					return t;
 			}
-			throw new IllegalArgumentException("Unkown Subscribe Status: " + val + "!");
-		}
-	}
-	
-	public static enum Feedback {
-		ACCEPTED((byte) 0x00),
-		REFUSED((byte) 0x01),
-		UNACCEPTABLE_PROTOCOL((byte) 0x02);
-		
-		private byte val;
-		
-		Feedback(byte val) {
-			this.val = val;
-		}
-		
-		public byte val() {
-			return val;
-		}
-		
-		public static Feedback valueOf(byte val) {
-			for(Feedback t: Feedback.values()) {
-				if (t.val == val)
-					return t;
-			}
-			throw new IllegalArgumentException("Unkown Feedback Status: " + val + "!");
+			throw new IllegalArgumentException("Unkown Push Mode: " + val + "!");
 		}
 	}
 	
@@ -122,6 +99,54 @@ public class Protocol {
 					return t;
 			}
 			throw new IllegalArgumentException("Unkown Subscribe Status: " + val + "!");
+		}
+	}
+	
+	public static enum RPC_REQ {
+		ACCEPTED((byte) 0x00),
+		REFUSED((byte) 0x01),
+		UNACCEPTABLE_PROTOCOL((byte) 0x02);
+		
+		private byte val;
+		
+		RPC_REQ(byte val) {
+			this.val = val;
+		}
+		
+		public byte val() {
+			return val;
+		}
+		
+		public static RPC_REQ valueOf(byte val) {
+			for(RPC_REQ t: RPC_REQ.values()) {
+				if (t.val == val)
+					return t;
+			}
+			throw new IllegalArgumentException("Unkown RPC:Request Status: " + val + "!");
+		}
+	}
+	
+	public static enum RPC_RESP {
+		ACCEPTED((byte) 0x00),
+		REFUSED((byte) 0x01),
+		UNACCEPTABLE_PROTOCOL((byte) 0x02);
+		
+		private byte val;
+		
+		RPC_RESP(byte val) {
+			this.val = val;
+		}
+		
+		public byte val() {
+			return val;
+		}
+		
+		public static RPC_RESP valueOf(byte val) {
+			for(RPC_RESP t: RPC_RESP.values()) {
+				if (t.val == val)
+					return t;
+			}
+			throw new IllegalArgumentException("Unkown RPC:Response Status: " + val + "!");
 		}
 	}
 	
@@ -205,11 +230,13 @@ public class Protocol {
 		HELLO((byte) 1),
 		SUBSCRIBE((byte) 2),
 		PUBLISH((byte) 3),
-		FEEDBACK((byte) 4),
 		PUSH((byte) 5),
 		LISTEN((byte) 6),
 
-		UNSUBSCRIBE((byte) 14),
+		RPC_REQ((byte) 7),
+		RPC_RESP((byte) 9),
+
+		// UNSUBSCRIBE((byte) 14),
 		BYE((byte) 15),
 		PING((byte) 0);
 		

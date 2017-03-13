@@ -3,8 +3,10 @@ package com.chinaroad.bubble.proto;
 import java.io.UTFDataFormatException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 
 import com.chinaroad.foundation.utils.ByteUtils;
+import com.chinaroad.foundation.utils.CharsetUtils;
 
 public class Payload {
 
@@ -42,9 +44,23 @@ public class Payload {
 		return this;
 	}
 
+	public Payload put(byte[] bts) {
+		this.raw = ByteUtils.merge(raw, bts);
+		return this;
+	}
+
 	public Payload putUTF(String str) throws UTFDataFormatException {
 		if (str == null) return this;
 		this.raw = ByteUtils.merge(raw, ByteUtils.asUTF(str));
+		return this;
+	}
+
+	public Payload slientPutUTF(String str) {
+		try {
+			this.putUTF(str);
+		} catch (UTFDataFormatException cause) {
+			/* Never Happen! */
+		}
 		return this;
 	}
 
@@ -61,11 +77,11 @@ public class Payload {
 	}
 	
 	public String asString(String charset) {
-		try {
-			return new String(raw, charset);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
+		return this.asString(CharsetUtils.toCharset(charset));
+	}
+	
+	public String asString(Charset charset) {
+		return new String(raw, charset);
 	}
 	
 }

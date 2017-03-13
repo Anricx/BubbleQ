@@ -36,32 +36,51 @@ flags
 => C:utf(flags)utf(topic)utf(msgid)playload
 => S:byte(status)utf(topic)utf(msgid)
         
-
-FEEDBACK => C:utf(flags)utf(target)utf(topic)utf(msgid)playload
-         => S:byte(status)utf(target)utf(topic)utf(msgid)
          
 PUSH => S:byte(mode)utf(from)[utf(flags)utf(topic)utf(msgid)playload]
      => none
 PUSH-mode => {
 	PUBLISH((byte) 0x00),
 	LISTENING((byte) 0x10),
-	FEEDBACK((byte) 0x01);
+	RPC_REQ((byte) 0x02),
 }
+
+REC_REQ
+flags
+ ----------------------------------------------------------
+ | bit    |        7       |   | 5    4 |   3    |  2    1   |0      |
+ ----------------------------------------------------------
+ | byte 1 | Require Response |   |                           |
+ ----------------------------------------------------------
+=> C:utf(flags)utf(target)utf(msgid)playload
+=> S:byte(status)utf(target)utf(msgid)playload
+
+REC_RESP
+flags
+ ----------------------------------------------------------
+ | bit    |        7       |   | 5    4 |   3    |  2    1   |0      |
+ ----------------------------------------------------------
+ | byte 1 |  |   |                           |
+ ----------------------------------------------------------
+=> C:utf(flags)utf(target)utf(msgid)playload
+=> S:byte(status)utf(target)utf(msgid)playload
+
 
 logger
 =======
-[Bubble][O] => Connection Open
-[Bubble][I] => Connection
-[Bubble][C] => Connection Closed
-[Bubble][E] => Error Occur
-[Bubble][R] => Socket Date Read
-[Bubble][W] => Socket Date Writen
+[Transfer][O] => Connection Open
+[Transfer][I] => Connection
+[Transfer][C] => Connection Closed
+[Transfer][E] => Error Occur
+[Transfer][R] => Socket Date Read
+[Transfer][W] => Socket Date Writen
 
 [Bubble][H] => Client HELLO Protocol
 [Bubble][S] => Client SUBSCRIBE Protocol
 [Bubble][L] => Client LISTEN Protocol
 [Bubble][P] => Client PUBLISH Protocol
-[Bubble][F] => Client FEEDBACK Protocol
 [Bubble][U] => Client PUSH Protocol
-[Bubble][N] => Client PING Protocol
+[Bubble][-] => Client PING Protocol
+[Bubble][C] => Client RPC Protocol
 [Bubble][B] => Client BYE Protocol
+[Bubble][*] => Client Whisper Protocol
