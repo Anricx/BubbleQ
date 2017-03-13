@@ -72,6 +72,12 @@ public class BubbleBiz {
 		}
 	}
 
+	public void ping(Protocol protocol, Session session) {
+		logger.info("[Bubble][-][" + SessionManager.getContext(session).getRemoteAddress() + "] - PING...");
+		ProtoBuilder builder = ProtoBuilder.create(Protocol.Type.PING).addPayload(protocol.getPayload());
+		session.send(builder.build());
+	}
+
 	public Publish publish(Protocol protocol, Session session, final StringBuilder _topic, final StringBuilder _msgid) {
 		ByteBuffer buffer = protocol.getPayload().asBuffer();
 		byte flags = buffer.get();

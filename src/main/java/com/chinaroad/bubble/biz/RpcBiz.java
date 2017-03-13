@@ -47,17 +47,17 @@ public class RpcBiz {
 		// Do The Work!
 		String to = SessionManager.getContext(client).getIdentifier();
 		try {
-			logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") From " + from + " To:" + to + "...");
+			logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") " + from + " => " + to + "...");
 			ProtoBuilder builder = ProtoBuilder.create(Protocol.Type.PUSH)
 				.addPayload(Payload.create().put(Protocol.PushMode.RPC_REQ.val()).slientPutUTF(from))
 				.addPayload(protocol.getPayload());
 
 			client.send(builder.build());
 			if ((flags & 0x80) >> 7 == 1) {	// Require Response?
-				logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") From " + from + " To:" + to + " Successfully, Watching for Response...");
+				logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") " + from + " => " + to + " Successfully, Watching for Response...");
 				return Protocol.RPC_REQ.ACCEPTED;
 			} else {	// Request Successfully!
-				logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") From " + from + " To:" + to + " Successfully!");
+				logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") " + from + " => " + to + " Successfully!");
 				builder = ProtoBuilder.create(Protocol.Type.RPC_REQ).addPayload(Payload.create()
 						.put(Protocol.RPC_REQ.ACCEPTED.val())
 						.slientPutUTF(target)
@@ -66,7 +66,7 @@ public class RpcBiz {
 				return Protocol.RPC_REQ.ACCEPTED;
 			}
 		} catch (Exception e) {
-			logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") From " + from + " To:" + to + " Error!", e);
+			logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") " + from + " => " + to + " Error!", e);
 			// Return Refused.
 			ProtoBuilder builder = ProtoBuilder.create(Protocol.Type.RPC_REQ).addPayload(Payload.create()
 							.put(Protocol.RPC_REQ.REFUSED.val())
@@ -101,17 +101,17 @@ public class RpcBiz {
 		// Do The Work!
 		String to = SessionManager.getContext(client).getIdentifier();
 		try {
-			logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Response msgid(" + msgid + ") From " + from + " To:" + to + "...");
+			logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Response msgid(" + msgid + ") " + from + " => " + to + "...");
 			ProtoBuilder builder = ProtoBuilder.create(Protocol.Type.PUSH)
 				.addPayload(Payload.create().put(Protocol.PushMode.RPC_RESP.val()).slientPutUTF(from))
 				.addPayload(protocol.getPayload());
 
 			client.send(builder.build());
 			// Response Successfully!
-			logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Response msgid(" + msgid + ") From " + from + " To:" + to + " Successfully!");
+			logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Response msgid(" + msgid + ") " + from + " => " + to + " Successfully!");
 			return Protocol.RPC_RESP.ACCEPTED;
 		} catch (Exception e) {
-			logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Response msgid(" + msgid + ") From " + from + " To:" + to + " Error!", e);
+			logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Response msgid(" + msgid + ") " + from + " => " + to + " Error!", e);
 			// Return Refused.
 			return Protocol.RPC_RESP.REFUSED;
 		}

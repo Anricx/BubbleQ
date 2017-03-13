@@ -1,5 +1,7 @@
 package com.chinaroad.bubble.proto;
 
+import java.nio.ByteOrder;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,6 +19,19 @@ public class ProtoBuilderTest {
 		Assert.assertEquals(Protocol.Type.HELLO, result.getType());
 		Assert.assertEquals(payload, result.getPayload().asString(CharsetUtils.UTF_8));
 		Assert.assertEquals(hello.length, parser.offset());
+	}
+	
+	@Test
+	public void testRpc2() {
+		long timestamp = System.currentTimeMillis();
+		Payload payload = Payload.create().put(timestamp);
+		
+		byte[] request = ProtoBuilder.create(Protocol.Type.PING).addPayload(payload).build();
+		ProtoParser parser = ProtoParser.from(request);
+		Protocol result = parser.result();
+		
+		System.out.println(timestamp);
+		System.out.println(result.getPayload().asBuffer().order(ByteOrder.LITTLE_ENDIAN).getLong());
 	}
 	
 	@Test

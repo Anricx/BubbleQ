@@ -1,5 +1,6 @@
 package com.chinaroad.bubble.proto;
 
+import java.nio.ByteOrder;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -225,6 +226,7 @@ public class Protocol {
 	public static final String VISITOR_HELLO_NAME = "visitor";
 	
 	protected static final byte[] EMPTY_BYTES = new byte[0];
+	protected static final ByteOrder BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
 	
 	public enum Type {
 		HELLO((byte) 1),

@@ -16,6 +16,7 @@ import com.chinaroad.bubble.context.SessionManager;
 import com.chinaroad.bubble.filter.ProtoFilter;
 import com.chinaroad.bubble.proto.Protocol;
 import com.chinaroad.foundation.transfer.SocketAcceptor;
+import com.chinaroad.foundation.transfer.session.IdleStatus;
 import com.chinaroad.foundation.transfer.session.Session;
 import com.chinaroad.foundation.utils.NumberUtils;
 
@@ -23,6 +24,8 @@ public class Application {
 
 	private static Logger logger = LoggerFactory.getLogger(Application.class);
 	private static String VERSION = "1.9.0Beta";
+
+	private static int maxIdleTime = 600000;	// 60000ms => 1min
 	
 	public static void main(String[] args) throws Exception {
 		// create Options object
@@ -62,7 +65,7 @@ public class Application {
 		// Inject the biz handler.
 		acceptor.setHandler(new BubbleHandler());
 		
-		logger.info("[Bubble][S] - Version:" + VERSION);
+		logger.info("BubbleQ Version " + VERSION);
 		logger.info("[Bubble][S] - Listening tcp://" + host + ":" + port + "...");
 		
 		// Start service
@@ -87,6 +90,7 @@ public class Application {
 				switch (status) {
 					case ACCEPTED:	/* Connect Accepted */
 						logger.info("[Bubble][H][" + SessionManager.getContext(session).getRemoteAddress() + "] - Connect Accepted, Identifier: " + identifier);
+						session.setIdleTime(IdleStatus.READ_IDLE, maxIdleTime);
 						break;
 					
 					/* Connect Refused */
@@ -150,11 +154,11 @@ public class Application {
 				Protocol.RPC_REQ status = rpcBiz.request(protocol, session, identifier, msgid);
 				switch (status) {
 					case ACCEPTED:	/* RPC_REQ Accepted */
-						logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + "), Target:\"" + identifier + "\" Accepted.");
+						logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") Target:\"" + identifier + "\" Accepted.");
 						break;
 						
 					default:
-						logger.warn("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + "), Target:\"" + identifier + "\" Refused!");
+						logger.warn("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") Target:\"" + identifier + "\" Refused!");
 						break;
 				}
 			} else if (Protocol.Type.RPC_RESP == protocol.getType()) { /* Client RPC Response */
@@ -163,17 +167,18 @@ public class Application {
 				Protocol.RPC_RESP status = rpcBiz.response(protocol, session, identifier, msgid);
 				switch (status) {
 					case ACCEPTED:	/* RPC_RESP Accepted */
-						logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Response msgid(" + msgid + "), Target:\"" + identifier + "\" Accepted.");
+						logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Response msgid(" + msgid + ") Target:\"" + identifier + "\" Accepted.");
 						break;
 						
 					default:
-						logger.warn("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Response msgid(" + msgid + "), Target:\"" + identifier + "\" Refused!");
+						logger.warn("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Response msgid(" + msgid + ") Target:\"" + identifier + "\" Refused!");
 						break;
 				}
 			} else if (Protocol.Type.PUSH == protocol.getType()) {  /* Client PUSH Topic */
 				// 
 			} else if (Protocol.Type.PING == protocol.getType()) {  /* Client PING */
-				// 
+				// logger.info("[Bubble][-][" + SessionManager.getContext(session).getRemoteAddress() + "] - Client PING...");
+				bubbleBiz.ping(protocol, session);
 			} else if (Protocol.Type.BYE == protocol.getType()) {  /* Client BYE */
 				logger.info("[Bubble][B][" + SessionManager.getContext(session).getRemoteAddress() + "] - Connection Release...");
 				session.close();

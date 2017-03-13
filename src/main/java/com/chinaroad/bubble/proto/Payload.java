@@ -3,8 +3,10 @@ package com.chinaroad.bubble.proto;
 import java.io.UTFDataFormatException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 
+import com.chinaroad.foundation.utils.ArrayUtils;
 import com.chinaroad.foundation.utils.ByteUtils;
 import com.chinaroad.foundation.utils.CharsetUtils;
 
@@ -49,6 +51,13 @@ public class Payload {
 		return this;
 	}
 
+	public Payload put(long num) {
+		byte[] bts = ByteUtils.toBytes(num);
+		if (Protocol.BYTE_ORDER == ByteOrder.LITTLE_ENDIAN) ArrayUtils.reverse(bts);
+		this.raw = ByteUtils.merge(raw, bts);
+		return this;
+	}
+
 	public Payload putUTF(String str) throws UTFDataFormatException {
 		if (str == null) return this;
 		this.raw = ByteUtils.merge(raw, ByteUtils.asUTF(str));
@@ -73,7 +82,7 @@ public class Payload {
 	}
 	
 	public ByteBuffer asBuffer() {
-		return ByteBuffer.wrap(raw);
+		return ByteBuffer.wrap(raw).order(Protocol.BYTE_ORDER);
 	}
 	
 	public String asString(String charset) {
