@@ -8,8 +8,8 @@ import com.chinaroad.foundation.transfer.session.Session;
 
 public class TopicManager {
 
-	public static Map<String, LinkedList<Session>> TOPICS = new ConcurrentHashMap<String, LinkedList<Session>>();
-	public static Map<String, LinkedList<Session>> LISTENERS = new ConcurrentHashMap<String, LinkedList<Session>>();
+	protected static Map<String, LinkedList<Session>> TOPICS = new ConcurrentHashMap<String, LinkedList<Session>>();
+	protected static Map<String, LinkedList<Session>> LISTENERS = new ConcurrentHashMap<String, LinkedList<Session>>();
 	
 	public static void subscribe(Session session, String topic) {
 		synchronized (Locker.FOR_TOPIC) {

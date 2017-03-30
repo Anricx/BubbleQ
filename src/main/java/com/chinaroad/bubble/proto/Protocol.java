@@ -1,8 +1,8 @@
 package com.chinaroad.bubble.proto;
 
 import java.nio.ByteOrder;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.chinaroad.foundation.utils.ByteUtils;
 
@@ -263,7 +263,7 @@ public class Protocol {
 	}
 	
 	private Header header;
-	private Set<Payload> payloads;
+	private List<Payload> payloads;
 	
 	public Protocol(Type type) {
 		this.setHeader(new Header(type));
@@ -283,7 +283,7 @@ public class Protocol {
 	}
 
 	protected Protocol addPayload(Payload payload) {
-		if (payloads == null) payloads = new LinkedHashSet<Payload>();
+		if (payloads == null) payloads = new LinkedList<Payload>();
 		payloads.add(payload);
 		return this;
 	}

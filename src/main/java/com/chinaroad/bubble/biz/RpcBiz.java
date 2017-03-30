@@ -37,6 +37,9 @@ public class RpcBiz {
 		if (client == null) {
 			// Return Refused.
 			logger.warn("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") From " + from + " Refused, No Target!");
+			// System.out.println(target);
+			// System.out.println(SessionContext.isIdentifier(target));
+			// System.out.println(SessionContext.isIdentifier(target));
 			ProtoBuilder builder = ProtoBuilder.create(Protocol.Type.RPC_REQ).addPayload(Payload.create()
 							.put(Protocol.RPC_REQ.REFUSED.val())
 							.slientPutUTF(target)

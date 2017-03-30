@@ -9,8 +9,8 @@ import com.chinaroad.foundation.transfer.session.Session;
 
 public class BubbleManager {
 	
-	public static Map<String, LinkedList<Session>> CLIENT_MAP = new ConcurrentHashMap<String, LinkedList<Session>>();	/* identifier => session */
-	public static Map<String, Session> CLIENTS = new ConcurrentHashMap<String, Session>();	/* identifier => session */
+	private static Map<String, LinkedList<Session>> CLIENT_MAP = new ConcurrentHashMap<String, LinkedList<Session>>();	/* identifier => session */
+	private static Map<String, Session> CLIENTS = new ConcurrentHashMap<String, Session>();	/* identifier => session */
 	
 	public static void signin(String name, String identifier, Session session) {
 		synchronized (Locker.FOR_SIGNIN) {
@@ -28,6 +28,8 @@ public class BubbleManager {
 	}
 	
 	public static Session selectClient(String name) {
+		// System.out.println("selectClient##########");
+		// System.out.println(name);
 		if (!CLIENT_MAP.containsKey(name)) return null;
 		
 		LinkedList<Session> clients = CLIENT_MAP.get(name);
