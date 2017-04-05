@@ -35,20 +35,20 @@ public class BubbleManager {
 	}
 	
 	public static Session selectClient(String name) {
-		// System.out.println("selectClient##########");
-		// System.out.println(name);
 		if (!CLIENT_MAP.containsKey(name)) return null;
 		
-		LinkedList<Session> clients = CLIENT_MAP.get(name);
-		//TODO Add SLB...
-		switch (clients.size()) {
-		case 1:
-			return clients.peek();
-
-		default:
-			Session client = clients.poll();	// %Loop First To Select
-			clients.offer(client);	// %Add To Last
-			return client;
+		synchronized (Locker.FOR_SIGNIN) {
+			LinkedList<Session> clients = CLIENT_MAP.get(name);
+			//TODO Add SLB...
+			switch (clients.size()) {
+			case 1:
+				return clients.peek();
+	
+			default:
+				Session client = clients.poll();	// %Loop First To Select
+				clients.offer(client);	// %Add To Last
+				return client;
+			}
 		}
 	}
 	
