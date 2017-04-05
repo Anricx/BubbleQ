@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.chinaroad.foundation.transfer.session.Session;
+import com.chinaroad.foundation.utils.ArrayUtils;
 
 public class BubbleManager {
 	
@@ -25,6 +26,12 @@ public class BubbleManager {
 	
 	public static Session getByIdentifier(String identifier) {
 		return CLIENTS.get(identifier);
+	}
+	
+	public static String[] findAllClients(String name) {
+		if (!CLIENT_MAP.containsKey(name)) return ArrayUtils.EMPTY_STRING_ARRAY;
+		
+		return SessionManager.getIdentifiers(CLIENT_MAP.get(name));
 	}
 	
 	public static Session selectClient(String name) {

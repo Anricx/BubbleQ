@@ -2,6 +2,7 @@ package com.chinaroad.bubble.biz;
 
 import java.io.UTFDataFormatException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,14 @@ public class RpcBiz {
 			return Protocol.RPC_REQ.UNACCEPTABLE_PROTOCOL;
 		}
 		// Auto Select RPC Client...
-		Session client = SessionContext.isIdentifier(target) ? BubbleManager.getByIdentifier(target) : BubbleManager.selectClient(target);
+		Session client = null;
+		if (SessionContext.isIdentifier(target)) {
+			logger.warn("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") From " + from + ", Find Client By Identifier...");
+			client = BubbleManager.getByIdentifier(target);
+		} else {
+			logger.warn("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") From " + from + ", Select Client By Pool:\n" + Arrays.toString(BubbleManager.findAllClients(target)));
+			client = BubbleManager.selectClient(target);
+		}
 		if (client == null) {
 			// Return Refused.
 			logger.warn("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") From " + from + " Refused, No Target!");
