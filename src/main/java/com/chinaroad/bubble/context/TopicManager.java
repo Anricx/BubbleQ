@@ -37,18 +37,14 @@ public class TopicManager {
 	
 	public static Session getCustomer(String topic) {
 		if (!TOPICS.containsKey(topic)) return null;
-
 		LinkedList<Session> customers = TOPICS.get(topic);
+		if (customers.size() == 0) return null;
+		if (customers.size() == 1) return customers.peek();
+		
 		//TODO Add SLB...
-		switch (customers.size()) {
-		case 1:
-			return customers.peek();
-
-		default:
-			Session client = customers.poll();	// %Loop First To Select
-			customers.offer(client);	// %Add To Last
-			return client;
-		}
+		Session client = customers.poll();	// %Loop First To Select
+		customers.offer(client);	// %Add To Last
+		return client;
 	}
 
 	public static void listening(Session session, String topic) {

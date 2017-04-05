@@ -28,11 +28,12 @@ public class SessionManager {
 	public static String[] getIdentifiers(List<Session> sessions) {
 		Set<String> set = new HashSet<String>();
 		for (Session session : sessions) {
+			if (session == null) continue;
 			set.add(SessionManager.getContext(session).getIdentifier());
 		}
 		return set.toArray(new String[set.size()]);
 	}
-	
+
 	public static String register(Session session, String name) {
 		if (name.contains("@") || name.contains("#")) throw new IllegalArgumentException("`name` contains '@' or '#'!");
 	

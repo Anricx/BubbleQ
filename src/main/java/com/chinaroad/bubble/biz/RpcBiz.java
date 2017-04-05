@@ -35,12 +35,23 @@ public class RpcBiz {
 		}
 		// Auto Select RPC Client...
 		Session client = null;
-		if (SessionContext.isIdentifier(target)) {
-			logger.warn("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") From " + from + ", Find Client By Identifier...");
-			client = BubbleManager.getByIdentifier(target);
-		} else {
-			logger.warn("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") From " + from + ", Select Client By Pool:\n" + Arrays.toString(BubbleManager.findAllClients(target)));
-			client = BubbleManager.selectClient(target);
+		try {
+			if (SessionContext.isIdentifier(target)) {
+				logger.warn("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") From " + from + ", Find Client By Identifier...");
+				client = BubbleManager.getByIdentifier(target);
+			} else {
+				logger.warn("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") From " + from + ", Select Client By Pool:\n" + Arrays.toString(BubbleManager.findAllClients(target)));
+				client = BubbleManager.selectClient(target);
+			}
+		} catch (Exception e) {
+			logger.info("[Bubble][C][" + SessionManager.getContext(session).getRemoteAddress() + "] - RPC:Request msgid(" + msgid + ") From " + from + " Select Client Error! Sessios Dump:" + Arrays.toString(BubbleManager.findAllClientSessions(target)), e);
+			// Return Refused.
+			ProtoBuilder builder = ProtoBuilder.create(Protocol.Type.RPC_REQ).addPayload(Payload.create()
+							.put(Protocol.RPC_REQ.REFUSED.val())
+							.slientPutUTF(target)
+							.slientPutUTF(msgid));
+			session.send(builder.build());
+			return Protocol.RPC_REQ.REFUSED;
 		}
 		if (client == null) {
 			// Return Refused.
