@@ -25,6 +25,7 @@ public class BubbleHandlerAdapter extends HandlerAdapter {
 	public void sessionIdle(Session session, IdleStatus status)
 			throws Exception {
 		logger.debug("[Transfer][I][" + SessionManager.getContext(session).getRemoteAddress() + "] - Connection IDLE:" + status + ".");
+		session.close();
 	}
 
 	@Override

@@ -20,7 +20,7 @@
         <com.chinaroad.foundation.utils.version>2.0.0</com.chinaroad.foundation.utils.version>
         <com.chinaroad.foundation.transfer.version>2.0.0</com.chinaroad.foundation.transfer.version>
         
-        <start-class>com.chinaroad.bubble.Application</start-class>
+        <main-class>com.chinaroad.bubble.Application</main-class>
 	</properties>
 
 	<dependencies>
@@ -56,13 +56,13 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>1.2.1</version>
+			<version>1.2.3</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.1</version>
+			<version>1.2.3</version>
 		</dependency>
 	</dependencies>
 
@@ -80,7 +80,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/../../lib/</outputDirectory>
+                            <outputDirectory>${project.build.directory}/../../.lib/</outputDirectory>
                             <includeScope>compile</includeScope>
                         </configuration>
                     </execution>
@@ -98,8 +98,8 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <classpathPrefix>../lib/</classpathPrefix>
-                            <mainClass>${start-class}</mainClass>
+                            <classpathPrefix>../.lib/</classpathPrefix>
+                            <mainClass>${main-class}</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Class-Path>./</Class-Path>

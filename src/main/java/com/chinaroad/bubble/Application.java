@@ -25,7 +25,7 @@ public class Application {
 	private static Logger logger = LoggerFactory.getLogger(Application.class);
 	private static String VERSION = "1.9.0Beta";
 
-	private static int maxIdleTime = 600000;	// 60000ms => 1min
+	private static final int maxIdleTime = 600000 * 5;	// 60000ms => 1min
 	
 	public static void main(String[] args) throws Exception {
 		// create Options object
