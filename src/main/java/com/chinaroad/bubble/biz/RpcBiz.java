@@ -83,7 +83,8 @@ public class RpcBiz {
 				builder = ProtoBuilder.create(Protocol.Type.RPC_REQ).addPayload(Payload.create()
 						.put(Protocol.RPC_REQ.ACCEPTED.val())
 						.slientPutUTF(target)
-						.slientPutUTF(msgid));
+						.slientPutUTF(msgid)
+						.slientPutUTF(to));
 				session.send(builder.build());
 				return Protocol.RPC_REQ.ACCEPTED;
 			}
