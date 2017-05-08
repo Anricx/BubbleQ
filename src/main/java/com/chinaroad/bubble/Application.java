@@ -90,6 +90,8 @@ public class Application {
 				switch (status) {
 					case ACCEPTED:	/* Connect Accepted */
 						logger.info("[Bubble][H][" + SessionManager.getContext(session).getRemoteAddress() + "] - Connect Accepted, Identifier: " + identifier);
+						if ("BubbleServices".equals(name)) break;
+						
 						session.setIdleTime(IdleStatus.READ_IDLE, maxIdleTime);
 						break;
 					

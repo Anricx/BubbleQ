@@ -42,6 +42,7 @@ public class AuthBiz {
 		String name = null, pass = null;
 		try {
 			name = ByteUtils.readUTF(buffer);
+			_name.append(name);
 			if (!Protocol.VISITOR_HELLO_NAME.equals(name)) {
 				pass = ByteUtils.readUTF(buffer);
 			}
