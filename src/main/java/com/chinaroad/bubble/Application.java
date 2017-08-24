@@ -12,6 +12,7 @@ import com.chinaroad.bubble.adapter.BubbleHandlerAdapter;
 import com.chinaroad.bubble.biz.AuthBiz;
 import com.chinaroad.bubble.biz.BubbleBiz;
 import com.chinaroad.bubble.biz.RpcBiz;
+import com.chinaroad.bubble.biz.StatsBiz;
 import com.chinaroad.bubble.context.SessionManager;
 import com.chinaroad.bubble.filter.ProtoFilter;
 import com.chinaroad.bubble.proto.Protocol;
@@ -49,6 +50,8 @@ public class Application {
 		
 		String host = cmd.getOptionValue("b", "0.0.0.0");
 		int port = NumberUtils.toInt(cmd.getOptionValue("p"), 1883);
+		// initialize...
+		StatsBiz.initialize();
 		
 		SocketAcceptor acceptor = new SocketAcceptor(host, port);
 		acceptor.getFilterChain().addLast("ProtoFilter", new ProtoFilter());

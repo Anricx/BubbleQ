@@ -14,13 +14,14 @@ public class BubbleManager {
 	private static final Map<String, LinkedList<Session>> CLIENT_MAP = new HashMap<String, LinkedList<Session>>();	/* identifier => session */
 	private static final Map<String, Session> CLIENTS = new HashMap<String, Session>();	/* identifier => session */
 	
-	public static void signin(String name, String identifier, Session session) {
+	public static String signin(String name, String identifier, Session session) {
 		synchronized (Locker.FOR_SIGNIN) {
 			if (!CLIENT_MAP.containsKey(name)) CLIENT_MAP.put(name, new LinkedList<Session>());
 	
 			CLIENTS.put(identifier, session);
 			CLIENT_MAP.get(name).add(session);
 		}
+		return identifier;
 	}
 	
 	public static Session getByIdentifier(String identifier) {
@@ -56,7 +57,7 @@ public class BubbleManager {
 		}
 	}
 	
-	public static void signout(Session session) {	
+	public static String signout(Session session) {	
 		SessionContext context = SessionManager.getContext(session);
 		// $Release Topics...
 		if (context.getTopics() != null) {
@@ -81,6 +82,7 @@ public class BubbleManager {
 				CLIENT_MAP.get(context.getName()).remove(session);
 			}
 		}
+		return context.getIdentifier();
 	}
 	
 }

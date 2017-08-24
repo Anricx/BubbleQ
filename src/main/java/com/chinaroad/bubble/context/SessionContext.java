@@ -4,13 +4,17 @@ import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class SessionContext {
 
 	private String name;
 	private String identifier;
 	private Integer id;
 	
+	@JSONField(name = "locale_address")
 	private InetSocketAddress localeAddress;
+	@JSONField(name = "remote_address")
 	private InetSocketAddress remoteAddress;
 
 	private Set<String> topics = null;
@@ -84,5 +88,5 @@ public class SessionContext {
 	public static boolean isIdentifier(String str) {
 		return str.contains("@");
 	}
-	
+
 }

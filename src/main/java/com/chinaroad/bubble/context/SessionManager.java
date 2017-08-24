@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.alibaba.fastjson.JSON;
+import com.chinaroad.bubble.biz.StatsBiz;
 import com.chinaroad.foundation.transfer.session.Session;
 import com.chinaroad.foundation.transfer.session.SocketSession;
 
@@ -38,13 +40,18 @@ public class SessionManager {
 		if (name.contains("@") || name.contains("#")) throw new IllegalArgumentException("`name` contains '@' or '#'!");
 	
 		// Inject Client Infor...
+		SessionContext context = SessionManager.getContext(session);
 		String identifier = SessionManager.getContext(session).initialize(name);
 		BubbleManager.signin(name.toString(), identifier, session); // #Signin Client~~~
+		// TODO
+		StatsBiz.getInstance().triggerCreate("link:" + identifier , JSON.toJSONString(context));
 		return identifier;
 	}
 	
 	public static void close(Session session) {
-		BubbleManager.signout(session); // #Signout Client~~~
+		String identifier = BubbleManager.signout(session); // #Signout Client~~~
+		// TODO
+		StatsBiz.getInstance().triggerDestory("link:" + identifier);
 		// Destory Context...
 		SessionManager.getContext(session).destory();
 	}
