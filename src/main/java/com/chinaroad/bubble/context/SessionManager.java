@@ -44,14 +44,14 @@ public class SessionManager {
 		String identifier = SessionManager.getContext(session).initialize(name);
 		BubbleManager.signin(name.toString(), identifier, session); // #Signin Client~~~
 		// TODO
-		StatsBiz.getInstance().triggerCreate("link:" + identifier , JSON.toJSONString(context));
+		// StatsBiz.getInstance().triggerCreate("link:" + identifier , JSON.toJSONString(context));
 		return identifier;
 	}
 	
 	public static void close(Session session) {
 		String identifier = BubbleManager.signout(session); // #Signout Client~~~
 		// TODO
-		StatsBiz.getInstance().triggerDestory("link:" + identifier);
+		// StatsBiz.getInstance().triggerDestory("link:" + identifier);
 		// Destory Context...
 		SessionManager.getContext(session).destory();
 	}

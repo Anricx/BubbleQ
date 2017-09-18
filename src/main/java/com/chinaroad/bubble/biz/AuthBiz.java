@@ -2,6 +2,7 @@ package com.chinaroad.bubble.biz;
 
 import java.io.UTFDataFormatException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +71,7 @@ public class AuthBiz {
 				session.send(builder.build());
 				return Protocol.Hello.IDENTIFIER_REJECTED;
 			} catch (Exception e) {
+				logger.info("[Bubble][A][" + SessionManager.getContext(session).getRemoteAddress() + "] - Error Occurs!", e);
 				Payload payload = Payload.create().put(Protocol.Hello.SERVER_UNAVAILABLE.val());
 				ProtoBuilder builder = ProtoBuilder.create(Protocol.Type.HELLO).addPayload(payload);
 				session.send(builder.build());
