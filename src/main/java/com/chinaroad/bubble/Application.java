@@ -51,7 +51,7 @@ public class Application {
 		String host = cmd.getOptionValue("b", "0.0.0.0");
 		int port = NumberUtils.toInt(cmd.getOptionValue("p"), 1883);
 		// initialize...
-		StatsBiz.initialize();
+		// StatsBiz.initialize();
 		
 		SocketAcceptor acceptor = new SocketAcceptor(host, port);
 		acceptor.getFilterChain().addLast("ProtoFilter", new ProtoFilter());
@@ -61,8 +61,8 @@ public class Application {
 		
 		// Custom setting...
 		acceptor.setSelectTimeout(10000);
-		acceptor.setSendBufferSize(1024);
-		acceptor.setReceiveBufferSize(1024);
+		acceptor.setSendBufferSize(1024000);
+		acceptor.setReceiveBufferSize(1024000);
 		acceptor.setReuseAddress(true);
 		
 		// Inject the biz handler.
@@ -81,11 +81,9 @@ public class Application {
 		private BubbleBiz bubbleBiz = new BubbleBiz();
 		private AuthBiz authBiz = new AuthBiz();
 		private RpcBiz rpcBiz = new RpcBiz();
-		
-		@Override
-		public void dataReceived(Session session, Object data) throws Exception {
-			Protocol protocol = (Protocol) data;
 
+		@Override
+		public void handle(Session session, Protocol protocol) throws Exception {
 			if (Protocol.Type.HELLO == protocol.getType()) {  /* Client HELLO */
 				StringBuilder name = new StringBuilder();
 				StringBuilder identifier = new StringBuilder();
@@ -192,7 +190,7 @@ public class Application {
 				session.close();
 			}
 		}
-		
+
 	}
 
 }

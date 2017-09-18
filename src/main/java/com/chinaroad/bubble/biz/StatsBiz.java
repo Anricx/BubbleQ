@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.chinaroad.bubble.cache.RedisCache;
 
+@Deprecated
 public class StatsBiz {
 
 	private static StatsBiz _instance = null;
@@ -35,7 +36,7 @@ public class StatsBiz {
 	public StatsBiz() {
 		conn = new RedisCache();
 	}
-	
+
 	public void prepare() {
 		logger.info("[Stats][Prepare] - DEL Bad Cache Links...");
 		Set<String> keys = conn.keys("link:*");

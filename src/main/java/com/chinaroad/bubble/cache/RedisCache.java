@@ -4,13 +4,14 @@ import java.util.Set;
 
 import redis.clients.jedis.Jedis;
 
+@Deprecated
 public class RedisCache {
 
 	private Jedis conn;
 	
 	public RedisCache() {
 		conn = new Jedis("120.24.253.84", 9001);
-		conn.auth("bvQwxPilqVLd");
+		conn.auth("");
 	}
 	
 	public Set<String> keys(String pattern) {
